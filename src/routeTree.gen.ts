@@ -9,9 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RechercheConseilRouteImport } from './routes/recherche-conseil'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiConseilChatRouteImport } from './routes/api/conseil-chat'
 
+const RechercheConseilRoute = RechercheConseilRouteImport.update({
+  id: '/recherche-conseil',
+  path: '/recherche-conseil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -25,32 +31,43 @@ const ApiConseilChatRoute = ApiConseilChatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/recherche-conseil': typeof RechercheConseilRoute
   '/api/conseil-chat': typeof ApiConseilChatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/recherche-conseil': typeof RechercheConseilRoute
   '/api/conseil-chat': typeof ApiConseilChatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/recherche-conseil': typeof RechercheConseilRoute
   '/api/conseil-chat': typeof ApiConseilChatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/conseil-chat'
+  fullPaths: '/' | '/recherche-conseil' | '/api/conseil-chat'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/conseil-chat'
-  id: '__root__' | '/' | '/api/conseil-chat'
+  to: '/' | '/recherche-conseil' | '/api/conseil-chat'
+  id: '__root__' | '/' | '/recherche-conseil' | '/api/conseil-chat'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  RechercheConseilRoute: typeof RechercheConseilRoute
   ApiConseilChatRoute: typeof ApiConseilChatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/recherche-conseil': {
+      id: '/recherche-conseil'
+      path: '/recherche-conseil'
+      fullPath: '/recherche-conseil'
+      preLoaderRoute: typeof RechercheConseilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -70,8 +87,19 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  RechercheConseilRoute: RechercheConseilRoute,
   ApiConseilChatRoute: ApiConseilChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
