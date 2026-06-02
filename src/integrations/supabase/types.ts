@@ -14,13 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      loi25_articles: {
+        Row: {
+          chapitre: string | null
+          contenu: string
+          created_at: string
+          embedding: string | null
+          id: string
+          numero: string
+          numero_int: number | null
+          section: string | null
+          titre: string | null
+        }
+        Insert: {
+          chapitre?: string | null
+          contenu: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          numero: string
+          numero_int?: number | null
+          section?: string | null
+          titre?: string | null
+        }
+        Update: {
+          chapitre?: string | null
+          contenu?: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          numero?: string
+          numero_int?: number | null
+          section?: string | null
+          titre?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      match_loi25_articles: {
+        Args: { match_count?: number; query_embedding: string }
+        Returns: {
+          chapitre: string
+          contenu: string
+          id: string
+          numero: string
+          numero_int: number
+          section: string
+          similarity: number
+          titre: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
